@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/polls/{pollId}/options/{optionId}/votes")
+
 public class VoteController {
     private final DomainManager manager;
 
@@ -30,9 +31,9 @@ public class VoteController {
     }
 
     @PostMapping
-    public ResponseEntity<Vote> createVote(@PathVariable String pollId, @PathVariable String optionId, @RequestParam String userId) {
+    public ResponseEntity<Vote> createVote(@PathVariable String pollId, @RequestParam String userId, @RequestParam String optionId) {
         try {
-            Vote vote = manager.createVote(userId, optionId);
+            Vote vote = manager.createVote(userId, pollId, optionId);
             return ResponseEntity.status(HttpStatus.CREATED).body(vote);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -40,7 +41,7 @@ public class VoteController {
     }
 
     @DeleteMapping("/{voteId}")
-    public ResponseEntity<Void> deleteVote(@PathVariable String pollId, @PathVariable String optionId, @PathVariable String voteId) {
+    public ResponseEntity<Void> deleteVote(@PathVariable String pollId, @RequestParam String optionId, @PathVariable String voteId) {
         try {
             manager.deleteVote(pollId, optionId, voteId);
             return ResponseEntity.noContent().build();

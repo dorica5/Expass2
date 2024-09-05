@@ -133,10 +133,14 @@ public class DomainManager {
     }
 
     // Vote operations
-    public Vote createVote(String userId, String optionId) {
-        Vote vote = repo.createVote(userId, optionId);
+    public Vote createVote(String userId, String pollId, String optionId) {
+        User user = getUser(userId);
+        Poll poll = getPoll(pollId);
+        VoteOption option = getOption(pollId, optionId);
+
+        Vote vote = repo.createVote(userId, pollId, optionId);
         if (vote == null) {
-            throw new ResourceNotFoundException("User or VoteOption not found");
+            throw new ResourceNotFoundException("Failed to create vote");
         }
         return vote;
     }

@@ -112,24 +112,29 @@ public class PollManager {
     }
 
     // Vote operations
-    public Vote createVote(String userId, String optionId) {
+    public Vote createVote(String userId, String pollId, String optionId) {
         User user = users.get(userId);
-        if (user == null) {
+        Poll poll = polls.get(pollId);
+        if (user == null || poll == null) {
             return null;
         }
 
-        for (Poll poll : polls.values()) {
-            VoteOption option = poll.getOptions().get(optionId);
-            if (option != null) {
-                Vote vote = new Vote();
-                vote.setId(generateId());
-                vote.setVoteOption(option);
-                vote.setUser(user);
-                option.addVote(vote);
-                return vote;
-            }
+        // Remove any existing votes by this user for this poll
+        for (VoteOption option : poll.getOptions().values()) {
+            option.getVotes().removeIf(vote -> vote.getUser().getId().equals(userId));
         }
-        return null;
+
+        VoteOption option = poll.getOptions().get(optionId);
+        if (option == null) {
+            return null;
+        }
+
+        Vote vote = new Vote();
+        vote.setId(generateId());
+        vote.setVoteOption(option);
+        vote.setUser(user);
+        option.addVote(vote);
+        return vote;
     }
 
     public boolean deleteVote(String pollId, String optionId, String voteId) {
