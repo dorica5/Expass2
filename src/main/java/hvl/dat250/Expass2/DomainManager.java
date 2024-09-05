@@ -138,9 +138,15 @@ public class DomainManager {
         Poll poll = getPoll(pollId);
         VoteOption option = getOption(pollId, optionId);
 
+        Instant now = Instant.now();
+        if (now.isBefore(poll.getPublishedAt()) || now.isAfter(poll.getValidUntil())) {
+            throw new IllegalStateException("Poll is not active. Voting is only allowed between "
+                    + poll.getPublishedAt() + " and " + poll.getValidUntil());
+        }
+
         Vote vote = repo.createVote(userId, pollId, optionId);
         if (vote == null) {
-            throw new ResourceNotFoundException("Failed to create vote");
+            throw new ResourceNotFoundException("Failed to create vote. User, poll, or option not found.");
         }
         return vote;
     }

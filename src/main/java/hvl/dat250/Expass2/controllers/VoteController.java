@@ -37,6 +37,8 @@ public class VoteController {
             return ResponseEntity.status(HttpStatus.CREATED).body(vote);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
 

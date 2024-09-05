@@ -13,13 +13,13 @@ import java.util.Map;
 
 public class VoteOption {
     private String caption;
-    private int presentationOrder = 0;
+    private long presentationOrder = 0;
     private String id;
     private final List<Vote> votes;
 
     public VoteOption() {
         caption = "";
-        setPresentationOrder(getPresentationOrder()+1);
+        presentationOrder =0;
         id = "";
         votes = new ArrayList<>();
     }
@@ -49,11 +49,11 @@ public class VoteOption {
         this.caption = caption;
     }
 
-    public int getPresentationOrder() {
+    public long getPresentationOrder() {
         return presentationOrder;
     }
 
-    public void setPresentationOrder(int presentationOrder) {
+    public void setPresentationOrder(long presentationOrder) {
         this.presentationOrder = presentationOrder;
     }
 }

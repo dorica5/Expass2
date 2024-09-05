@@ -15,7 +15,7 @@ public class PollManager {
     private final Map<String, User> users = new ConcurrentHashMap<>();
     private final Map<String, Poll> polls = new ConcurrentHashMap<>();
     private final AtomicLong idCounter = new AtomicLong();
-
+    private final AtomicLong presentationCounter = new AtomicLong();
     public PollManager() {}
 
     private String generateId() {
@@ -86,6 +86,7 @@ public class PollManager {
         }
         String optionId = generateId();
         option.setId(optionId);
+        option.setPresentationOrder((presentationCounter.incrementAndGet()));
         poll.getOptions().put(optionId, option);
         return option;
     }
@@ -119,7 +120,6 @@ public class PollManager {
             return null;
         }
 
-        // Remove any existing votes by this user for this poll
         for (VoteOption option : poll.getOptions().values()) {
             option.getVotes().removeIf(vote -> vote.getUser().getId().equals(userId));
         }
