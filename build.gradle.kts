@@ -19,8 +19,16 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation ("org.springframework.boot:spring-boot-starter-webflux")
+	testImplementation ("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.junit.jupiter:junit-jupiter:5.11.0")
+	implementation("org.springframework.boot:spring-boot-test:3.3.3")
+	implementation("org.springframework:spring-webflux:6.1.12")
+
+
+
+
 }
 
 tasks.withType<Test> {

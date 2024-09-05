@@ -5,6 +5,7 @@ import hvl.dat250.Expass2.ResourceNotFoundException;
 import hvl.dat250.Expass2.domain.Poll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,9 @@ public class PollController {
         }
     }
 
+
     @PostMapping
+
     public ResponseEntity<Poll> createPoll(@RequestParam String userId, @RequestParam String question) {
         try {
             Poll poll = manager.createPoll(userId, question);
