@@ -27,9 +27,8 @@ One issue that still remains is regarding the backend. Since the backend is a fi
 
 Moving forward i hope to improve the authentication flow by replacing localStorage with a secure session management system when we implement a proper database. I will also explore ways to handle backend resets, something i know will be much easier to handle with a proper database.
 
-##### GitHub Repository Links
+##### GitHub Front-End
 
-Expass 1: [GitHub - Expass 1](https://github.com/dorica5/dat250_demo)
-Expass 2: [GitHub - Expass 2](https://github.com/dorica5/Expass2)
+Front End: [React Front End](https://github.com/dorica5/expass3_Frontend)
 
 I'm using the same folder i used last week for Expass2, so to view the work from last week without the changes i made, refer to the last commit for last week.
