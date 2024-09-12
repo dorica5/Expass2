@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/polls")
 public class PollController {
@@ -20,11 +22,20 @@ public class PollController {
         this.manager = manager;
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<Poll>> getPolls() {
+//        List<Poll> polls = manager.getPolls();
+//        return ResponseEntity.ok(polls);
+//    }
+
+    //For expass3
     @GetMapping
     public ResponseEntity<List<Poll>> getPolls() {
-        List<Poll> polls = manager.getPolls();
-        return ResponseEntity.ok(polls);
+        List<Poll> pollsForFrontend = manager.getPollsForFrontend();
+        System.out.println(pollsForFrontend);
+        return ResponseEntity.ok(pollsForFrontend);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Poll> getPoll(@PathVariable String id) {
@@ -37,17 +48,29 @@ public class PollController {
     }
 
 
-    @PostMapping
-
-    public ResponseEntity<Poll> createPoll(@RequestParam String userId, @RequestParam String question) {
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Poll> createPoll(@RequestBody Map<String, Object> payload) {
         try {
-            Poll poll = manager.createPoll(userId, question);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(poll);
+            String userId = (String) payload.get("userId");
+            String question = (String) payload.get("question");
+            List<String> options = (List<String>) payload.get("options");
+
+
+            Poll poll = new Poll();
+            poll.setQuestion(question);
+            Poll createdPoll = manager.createPoll(userId, question);
+
+            for (String optionCaption : options) {
+                manager.createOption(createdPoll.getId(), optionCaption);
+            }
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdPoll);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Poll> updatePoll(@PathVariable String id, @RequestParam String question) {

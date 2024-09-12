@@ -1,22 +1,39 @@
 package hvl.dat250.Expass2.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import java.time.Instant;
-import java.util.Calendar;
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 
 public class Vote {
+
     private Instant publishedAt;
     private String id;
     private User user;
+    @JsonBackReference
     private VoteOption voteOption;
 
     public Vote() {
-        publishedAt = Instant.now();
-        id = "";
+        this.publishedAt = Instant.now();
+        this.id = "";
     }
+
+    public Instant getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(Instant publishedAt) {
+        this.publishedAt = publishedAt;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public User getUser() {
         return user;
     }
@@ -31,21 +48,5 @@ public class Vote {
 
     public void setVoteOption(VoteOption voteOption) {
         this.voteOption = voteOption;
-    }
-
-    public Instant getPublishedAt() {
-        return publishedAt;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setPublishedAt(Instant publishedAt) {
-        this.publishedAt = publishedAt;
     }
 }

@@ -52,6 +52,15 @@ public class DomainManager {
         }
     }
 
+    public User verifyUser(String username, String email){
+        try {
+            return repo.verifyUser(username, email);
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
+
     // Poll operations
     public Poll getPoll(String id) {
         Poll poll = repo.getPoll(id);
@@ -64,9 +73,14 @@ public class DomainManager {
     public List<Poll> getPolls() {
         return new ArrayList<>(repo.getPolls().values());
     }
+    public List<Poll> getPollsForFrontend() {
+        return repo.getPollsForFrontend();
+    }
 
     public Poll createPoll(String userId, String question) {
+        System.out.println("We are here");
         User user = getUser(userId);
+        System.out.println("We got userID");
         Poll poll = new Poll();
         poll.setQuestion(question);
         poll.setPublishedAt(Instant.now());

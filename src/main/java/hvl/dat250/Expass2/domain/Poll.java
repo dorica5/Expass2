@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.util.*;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Poll {
     @JsonProperty("question")
     private String question;
@@ -70,6 +69,17 @@ public class Poll {
 
     public Map<String, VoteOption> getOptions() {
         return options;
+    }
+
+    public void setOptions(Map<String, VoteOption> options) {
+        this.options = options;
+    }
+
+    public void setOptionsList(List<VoteOption> optionsList) {
+        this.options = new HashMap<>();
+        for (VoteOption option : optionsList) {
+            this.options.put(option.getId(), option);
+        }
     }
 
 }

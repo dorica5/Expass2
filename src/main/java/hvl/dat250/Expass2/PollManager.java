@@ -6,6 +6,8 @@ import hvl.dat250.Expass2.domain.Vote;
 import hvl.dat250.Expass2.domain.VoteOption;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -49,6 +51,18 @@ public class PollManager {
     public User deleteUser(String id) {
         return users.remove(id);
     }
+    // User verification method
+    public User verifyUser(String username, String email) throws ResourceNotFoundException {
+
+        for (User user : users.values()) {
+            if (user.getEmail().equals(email) && user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        throw new ResourceNotFoundException("User not found");
+    }
+
+
 
     // Poll operations
     public Poll getPoll(String id) {
@@ -59,7 +73,33 @@ public class PollManager {
         return polls;
     }
 
+    public List<Poll> getPollsForFrontend() {
+        List<Poll> pollsForFrontend = new ArrayList<>();
+
+        for (Poll poll : polls.values()) {
+            Poll pollCopy = new Poll();
+            pollCopy.setId(poll.getId());
+            pollCopy.setQuestion(poll.getQuestion());
+            pollCopy.setPublishedAt(poll.getPublishedAt());
+            pollCopy.setValidUntil(poll.getValidUntil());
+
+
+            List<VoteOption> optionsList = new ArrayList<>(poll.getOptions().values());
+            pollCopy.setOptionsList(optionsList);
+
+            pollsForFrontend.add(pollCopy);
+        }
+
+        return pollsForFrontend;
+    }
+
+
     public Poll createPoll(User user, Poll poll) {
+
+        if (user == null) {
+            System.out.println("We are here");
+            throw new ResourceNotFoundException("User not found");
+        }
         String id = generateId();
         poll.setId(id);
         polls.put(id, poll);
