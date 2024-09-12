@@ -10,20 +10,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.client.RestClient;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PollAppIntegrationTest {
 
     @LocalServerPort
     private int port;
 
-    RestClient customClient;
+    private WebTestClient webTestClient;
 
     @BeforeEach
     public void setup() {
-        customClient = RestClient.builder()
+        webTestClient = WebTestClient.bindToServer()
                 .baseUrl("http://localhost:" + port)
                 .build();
     }
@@ -82,64 +82,86 @@ public class PollAppIntegrationTest {
     }
 
     private User createUser(String username, String email) {
-        return customClient.post()
+        return webTestClient.post()
                 .uri("/users?username={username}&email={email}", username, email)
-                .retrieve()
-                .body(User.class);
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(User.class)
+                .returnResult().getResponseBody();
     }
 
     private User[] getUsers() {
-        return customClient.get()
+        return webTestClient.get()
                 .uri("/users")
-                .retrieve()
-                .body(User[].class);
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(User[].class)
+                .returnResult().getResponseBody();
     }
 
     private Poll createPoll(String userId, String question) {
-        return customClient.post()
+        return webTestClient.post()
                 .uri("/polls?userId={userId}&question={question}", userId, question)
                 .contentType(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .body(Poll.class);
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(Poll.class)
+                .returnResult().getResponseBody();
     }
 
+
     private VoteOption addOptionToPoll(String pollId, String caption) {
-        return customClient.post()
+        return webTestClient.post()
                 .uri("/polls/{pollId}/options?caption={caption}", pollId, caption)
-                .retrieve()
-                .body(VoteOption.class);
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(VoteOption.class)
+                .returnResult().getResponseBody();
     }
 
     private Poll[] getPolls() {
-        return customClient.get()
+        return webTestClient.get()
                 .uri("/polls")
-                .retrieve()
-                .body(Poll[].class);
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Poll[].class)
+                .returnResult().getResponseBody();
     }
 
     private Vote createVote(String pollId, String optionId, String userId) {
-        return customClient.post()
+        return webTestClient.post()
                 .uri("/polls/{pollId}/options/{optionId}/votes?userId={userId}", pollId, optionId, userId)
-                .retrieve()
-                .body(Vote.class);
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(Vote.class)
+                .returnResult().getResponseBody();
     }
 
     private Vote[] getVotes(String pollId, String optionId) {
-        return customClient.get()
+        return webTestClient.get()
                 .uri("/polls/{pollId}/options/{optionId}/votes", pollId, optionId)
-                .retrieve()
-                .body(Vote[].class);
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Vote[].class)
+                .returnResult().getResponseBody();
     }
 
     private void deletePoll(String pollId) {
-        customClient.delete()
+        webTestClient.delete()
                 .uri("/polls/{pollId}", pollId)
-                .retrieve()
-                .toBodilessEntity();
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
     public void contextLoads() {
-        assertNotNull(customClient);
+        assertNotNull(webTestClient);
     }
 }

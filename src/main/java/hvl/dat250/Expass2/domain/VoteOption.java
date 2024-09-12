@@ -1,48 +1,29 @@
 package hvl.dat250.Expass2.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.springframework.context.annotation.Bean;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 
 public class VoteOption {
+
     private String caption;
-    private long presentationOrder = 0;
+    private long presentationOrder;
     private String id;
-    private final List<Vote> votes;
+    @JsonManagedReference
+    private List<Vote> votes;
+
 
     public VoteOption() {
-        caption = "";
-        presentationOrder =0;
-        id = "";
-        votes = new ArrayList<>();
+        this.caption = "";
+        this.presentationOrder = 0;
+        this.id = "";
+        this.votes = new ArrayList<>();
     }
-
-    public List<Vote> getVotes() {
-        return votes;
-    }
-    public Vote addVote(Vote vote) {
-        votes.add(vote);
-        return vote;
-    }
-
 
     public String getCaption() {
         return caption;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setCaption(String caption) {
@@ -55,5 +36,26 @@ public class VoteOption {
 
     public void setPresentationOrder(long presentationOrder) {
         this.presentationOrder = presentationOrder;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
+    public Vote addVote(Vote vote) {
+        votes.add(vote);
+        return vote;
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -61,4 +61,18 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    //for expass 3
+    @PostMapping("/login")
+    public ResponseEntity<User> loginUser(@RequestParam String username, @RequestParam String email) {
+        try {
+            User user = manager.verifyUser(username, email);
+            return ResponseEntity.ok(user);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+
+
 }

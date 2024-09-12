@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/polls/{pollId}/options/{optionId}/votes")
 
@@ -31,7 +33,11 @@ public class VoteController {
     }
 
     @PostMapping
-    public ResponseEntity<Vote> createVote(@PathVariable String pollId, @RequestParam String userId, @RequestParam String optionId) {
+    public ResponseEntity<Vote> createVote(@PathVariable String pollId, @RequestBody Map<String, String> payload) {
+        String userId = payload.get("userId");
+        String optionId = payload.get("optionId");
+        System.out.println("User Id: "+ userId+" Option Id " +optionId);
+
         try {
             Vote vote = manager.createVote(userId, pollId, optionId);
             return ResponseEntity.status(HttpStatus.CREATED).body(vote);
@@ -41,6 +47,7 @@ public class VoteController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
+
 
     @DeleteMapping("/{voteId}")
     public ResponseEntity<Void> deleteVote(@PathVariable String pollId, @RequestParam String optionId, @PathVariable String voteId) {
